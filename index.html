@@ -4,11 +4,17 @@
   <script src="https://cdn.logr-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
 <script>window.LogRocket && window.LogRocket.init('ke04ah/ai-coe');</script>
   <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtm.js?id=G-XCSQET61HC"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XCSQET61HC"></script>
+
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+
+  function gtag(){
+    dataLayer.push(arguments);
+  }
+
   gtag('js', new Date());
+  gtag('config', 'G-XCSQET61HC');
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -520,12 +526,31 @@
     $('#lrStatus').textContent = window.__lrBlocked ? 'LogRocket: script blocked/unreachable' :
       (LR ? 'LogRocket: loaded, set app ID via ?lr=ORG/APP' : 'LogRocket: not loaded');
   }
-  function track(name, props){
-    props = props||{};
-    const line = new Date().toLocaleTimeString()+'  '+name+(Object.keys(props).length?' '+JSON.stringify(props):'');
-    const d=document.createElement('div'); d.textContent=line; logBody.appendChild(d); logBody.scrollTop=logBody.scrollHeight;
-    if (lrReady) { try{ LR.track(name, props); }catch(e){} }
-  }
+  
+function track(name, props){
+    props = props || {};
+
+    const line = new Date().toLocaleTimeString() + '  ' +
+        name + (Object.keys(props).length ? ' ' + JSON.stringify(props) : '');
+
+    const d = document.createElement('div');
+    d.textContent = line;
+    logBody.appendChild(d);
+    logBody.scrollTop = logBody.scrollHeight;
+
+    // LogRocket tracking
+    if (lrReady) {
+        try {
+            LR.track(name, props);
+        } catch(e) {}
+    }
+
+    // Google Analytics 4 tracking
+    if (typeof gtag === 'function') {
+        gtag('event', name, props);
+    }
+}
+
   function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
   $('#logbar').onclick=()=>{ $('#logpanel').classList.toggle('min'); $('#logToggle').textContent=$('#logpanel').classList.contains('min')?'+':'–'; };
   track('page_loaded',{lrReady});
